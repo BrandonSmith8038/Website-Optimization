@@ -28,11 +28,17 @@ gulp.task('copyHtml', function () {
 gulp.task('imageMin', function () {
     gulp.src('src/img/*')
         .pipe(imagemin({
+            interlaced: true,
+            progressive: true,
+            optimizationLevel: 5,
             verbose: true
         }))
         .pipe(gulp.dest('dist/img'))
     gulp.src('src/views/images/*')
         .pipe(imagemin({
+            interlaced: true,
+            progressive: true,
+            optimizationLevel: 5,
             verbose: true
         }))
         .pipe(gulp.dest('dist/views/images'))
@@ -63,8 +69,6 @@ gulp.task('minifyCss', function () {
         }))
         .pipe(gulp.dest('dist/views/css'))
 });
-
-
 
 gulp.task('default', ['message', 'copyHtml', 'imageMin', 'minifyJs', 'minifyCss']);
 
