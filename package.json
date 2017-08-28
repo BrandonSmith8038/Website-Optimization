@@ -1,0 +1,22 @@
+{
+  "name": "brandon-smith-website-optimization",
+  "version": "1.0.0",
+  "description": "Created for a project for the udacity front end nano degree program.",
+  "main": "index.html",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/BrandonSmith8038/Website-Optimization.git"
+  },
+  "author": "Brandon Smith",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/BrandonSmith8038/Website-Optimization/issues"
+  },
+  "homepage": "https://github.com/BrandonSmith8038/Website-Optimization#readme",
+  "devDependencies": {
+    "gulp": "^3.9.1"
+  }
+}
