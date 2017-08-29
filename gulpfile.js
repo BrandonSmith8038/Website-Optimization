@@ -79,7 +79,7 @@ gulp.task('watch',function(){
     gulp.watch('src/views/js/*.js', ['minifyJs']);
     gulp.watch('src/css/*.css', ['minifyCss']);
     gulp.watch('src/views/css/*.css', ['minifyCss']);
-    gulp.watch('src/*.html', ['copyHtml']);
+    gulp.watch('src/*.html', ['htmlMin']);
     gulp.watch('src/img/*', ['imageMin']);
     gulp.watch('src/viewsimages/*', ['imageMin']);
 });
