@@ -2,6 +2,7 @@ const gulp = require('gulp');
 const imagemin = require('gulp-imagemin');
 const uglify = require('gulp-uglify');
 const cssMin = require('gulp-clean-css');
+var htmlmin = require('gulp-htmlmin');
 
 
 /*
@@ -19,8 +20,9 @@ gulp.task('message', function () {
 })
 
 //Copy All HTML Files
-gulp.task('copyHtml', function () {
+gulp.task('htmlMin', function () {
     gulp.src('src/*.html')
+        .pipe(htmlmin({collapseWhitespace: true}))
         .pipe(gulp.dest('dist'));
 });
 
@@ -70,7 +72,7 @@ gulp.task('minifyCss', function () {
         .pipe(gulp.dest('dist/views/css'))
 });
 
-gulp.task('default', ['message', 'copyHtml', 'imageMin', 'minifyJs', 'minifyCss']);
+gulp.task('default', ['message', 'htmlMin', 'imageMin', 'minifyJs', 'minifyCss']);
 
 gulp.task('watch',function(){
     gulp.watch('src/js/*.js', ['minifyJs']);
