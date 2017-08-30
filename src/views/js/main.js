@@ -441,7 +441,7 @@ var resizePizzas = function(size) {
 	  }
 	  
     //Variable created outside of the loop so it does not call layout each iteration
-	  var randomPizzas = document.getElementsByClassName("randomPizzaContainer");
+	  var randomPizzas = document.querySelector(".randomPizzaContainer");
 	  for (var i = 0; i < randomPizzas.length; i++){
 		  randomPizzas[i].style.width = newWidth + "%";
 	  }
@@ -494,7 +494,7 @@ function updatePositions() {
   frame++;
   window.performance.mark("mark_start_frame");
 
-  //Move the variable out side of the loop to help with the force felows problem
+  //Move the variables out side of the loop to help with the force felows problem
   var scrollCalc = document.body.scrollTop;
   var phase = "";
   for (var i = 0; i < items.length; i++) {
@@ -522,7 +522,7 @@ document.addEventListener('DOMContentLoaded', function() {
   var s = 256;
 	
   for (var i = 0; i < 40; i++) {
-	var elem = document.createElement('img');
+    var elem = document.createElement('img');
     elem.className = 'mover';
     elem.src = "/dist/views/images/pizza.png";
     elem.style.height = "100px";
@@ -533,7 +533,7 @@ document.addEventListener('DOMContentLoaded', function() {
   }
 
 //Defined globally and moved outside of the updatePositions loop to avoid running a query for each update.
-  items = document.querySelectorAll('.mover');
+  items = document.getElementsByClassName('mover');
  
   updatePositions();
 });
