@@ -3,6 +3,7 @@ const imagemin = require('gulp-imagemin');
 const uglify = require('gulp-uglify');
 const cssMin = require('gulp-clean-css');
 var htmlmin = require('gulp-htmlmin');
+var sourcemaps = require('gulp-sourcemaps');
 
 
 /*
@@ -49,10 +50,14 @@ gulp.task('imageMin', function () {
 //Minify Js
 gulp.task('minifyJs', function () {
     gulp.src('src/js/*.js')
+        .pipe(sourcemaps.init())
         .pipe(uglify())
+        .pipe(sourcemaps.write())
         .pipe(gulp.dest('dist/js'))
     gulp.src('src/views/js/*.js')
+        .pipe(sourcemaps.init())
         .pipe(uglify())
+        .pipe(sourcemaps.write())
         .pipe(gulp.dest('dist/views/js'))
 });
 

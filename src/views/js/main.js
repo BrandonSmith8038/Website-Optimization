@@ -15,6 +15,8 @@ Creator:
 Cameron Pittman, Udacity Course Developer
 cameron *at* udacity *dot* com
 */
+// Global array for updating background moving pizza images.
+var items = "";
 
 // As you may have realized, this website randomly generates pizzas.
 // Here are arrays of all possible pizza ingredients.
@@ -358,7 +360,7 @@ var makeRandomPizza = function() {
   return pizza;
 };
 
-// returns a DOM element for each pizza
+// Creates a DOM element for each pizza
 var pizzaElementGenerator = function(i) {
   var pizzaContainer,             // contains pizza title, image and list of ingredients
       pizzaImageContainer,        // contains the pizza image
@@ -378,7 +380,7 @@ var pizzaElementGenerator = function(i) {
   pizzaContainer.id = "pizza" + i;                // gives each pizza element a unique id
   pizzaImageContainer.style.width="35%";
 
-  pizzaImage.src = "images/pizza.png";
+  pizzaImage.src = "/dist/views/images/pizza.png";
   pizzaImage.classList.add("img-responsive");
   pizzaImageContainer.appendChild(pizzaImage);
   pizzaContainer.appendChild(pizzaImageContainer);
@@ -406,13 +408,13 @@ var resizePizzas = function(size) {
   function changeSliderLabel(size) {
     switch(size) {
       case "1":
-        document.querySelector("#pizzaSize").innerHTML = "Small";
+        document.getElementById("pizzaSize").innerHTML = "Small";
         return;
       case "2":
-        document.querySelector("#pizzaSize").innerHTML = "Medium";
+        document.getElementById("pizzaSize").innerHTML = "Medium";
         return;
       case "3":
-        document.querySelector("#pizzaSize").innerHTML = "Large";
+        document.getElementById("pizzaSize").innerHTML = "Large";
         return;
       default:
         console.log("bug in changeSliderLabel");
@@ -420,42 +422,31 @@ var resizePizzas = function(size) {
   }
 
   changeSliderLabel(size);
-
-   // Returns the size difference to change a pizza element from one size to another. Called by changePizzaSlices(size).
-  function determineDx (elem, size) {
-    var oldWidth = elem.offsetWidth;
-    var windowWidth = document.querySelector("#randomPizzas").offsetWidth;
-    var oldSize = oldWidth / windowWidth;
-
-    // Changes the slider value to a percent width
-    function sizeSwitcher (size) {
-      switch(size) {
-        case "1":
-          return 0.25;
-        case "2":
-          return 0.3333;
-        case "3":
-          return 0.5;
-        default:
-          console.log("bug in sizeSwitcher");
-      }
-    }
-
-    var newSize = sizeSwitcher(size);
-    var dx = (newSize - oldSize) * windowWidth;
-
-    return dx;
+ 
+  //ChangePizzaSizes is seperated from where the query and the manipulation happens to help with force reflow
+  //issues.
+  function changePizzaSizes(size){
+	  switch(size) {
+		  case "1":
+		    newWidth = 25;
+			break;
+		  case "2":
+		    newWidth = 33.3;
+		    break;
+		  case "3":
+		    newWidth = 50;
+			break;
+		  default:
+		    console.log("bug in changePizzaSizes");
+	  }
+	  
+    //Variable created outside of the loop so it does not call layout each iteration
+	  var randomPizzas = document.getElementsByClassName("randomPizzaContainer");
+	  for (var i = 0; i < randomPizzas.length; i++){
+		  randomPizzas[i].style.width = newWidth + "%";
+	  }
   }
-
-  // Iterates through pizza elements on the page and changes their widths
-  function changePizzaSizes(size) {
-    for (var i = 0; i < document.querySelectorAll(".randomPizzaContainer").length; i++) {
-      var dx = determineDx(document.querySelectorAll(".randomPizzaContainer")[i], size);
-      var newwidth = (document.querySelectorAll(".randomPizzaContainer")[i].offsetWidth + dx) + 'px';
-      document.querySelectorAll(".randomPizzaContainer")[i].style.width = newwidth;
-    }
-  }
-
+  
   changePizzaSizes(size);
 
   // User Timing API is awesome
@@ -467,9 +458,11 @@ var resizePizzas = function(size) {
 
 window.performance.mark("mark_start_generating"); // collect timing data
 
-// This for-loop actually creates and appends all of the pizzas when the page loads
+//Creates all the pizzas and puts them on the page
+//Seperates the query and manipulation
+var pizzasDiv = document.getElementById("randomPizzas");
+// Batched DOM manipulation method appendChild
 for (var i = 2; i < 100; i++) {
-  var pizzasDiv = document.getElementById("randomPizzas");
   pizzasDiv.appendChild(pizzaElementGenerator(i));
 }
 
@@ -501,12 +494,15 @@ function updatePositions() {
   frame++;
   window.performance.mark("mark_start_frame");
 
-  var items = document.querySelectorAll('.mover');
+  //Move the variable out side of the loop to help with the force felows problem
+  var scrollCalc = document.body.scrollTop;
+  var phase = "";
   for (var i = 0; i < items.length; i++) {
-    var phase = Math.sin((document.body.scrollTop / 1250) + (i % 5));
+    phase = Math.sin((scrollCalc / 1250) + [i % 5]); //i%5 wrapped in array for optimization
     items[i].style.left = items[i].basicLeft + 100 * phase + 'px';
   }
-
+ 
+ 
   // User Timing API to the rescue again. Seriously, it's worth learning.
   // Super easy to create custom metrics.
   window.performance.mark("mark_end_frame");
@@ -520,19 +516,24 @@ function updatePositions() {
 // runs updatePositions on scroll
 window.addEventListener('scroll', updatePositions);
 
-// Generates the sliding pizzas when the page loads.
+// Creates all the sliding pizzas when the page loads. 
 document.addEventListener('DOMContentLoaded', function() {
   var cols = 8;
   var s = 256;
-  for (var i = 0; i < 200; i++) {
-    var elem = document.createElement('img');
+	
+  for (var i = 0; i < 40; i++) {
+	var elem = document.createElement('img');
     elem.className = 'mover';
-    elem.src = "views/images/pizza.png";
+    elem.src = "/dist/views/images/pizza.png";
     elem.style.height = "100px";
     elem.style.width = "73.333px";
     elem.basicLeft = (i % cols) * s;
     elem.style.top = (Math.floor(i / cols) * s) + 'px';
-    document.querySelector("#movingPizzas1").appendChild(elem);
+	document.getElementById("movingPizzas1").appendChild(elem);
   }
+
+//Defined globally and moved outside of the updatePositions loop to avoid running a query for each update.
+  items = document.querySelectorAll('.mover');
+ 
   updatePositions();
 });
